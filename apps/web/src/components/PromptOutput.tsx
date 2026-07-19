@@ -3,13 +3,24 @@
 import { useState } from 'react';
 
 interface PromptOutputProps {
+  /** Full prompt (identity + modules) — what the Copy button copies */
   positivePrompt: string;
+  /** Auto-injected identity preservation block */
+  identityPrompt: string;
+  /** User-selected module chunks only */
+  modulePrompt: string;
   negativePrompt: string;
 }
 
-export function PromptOutput({ positivePrompt, negativePrompt }: PromptOutputProps) {
+export function PromptOutput({
+  positivePrompt,
+  identityPrompt,
+  modulePrompt,
+  negativePrompt,
+}: PromptOutputProps) {
   const [copiedPos, setCopiedPos] = useState(false);
   const [copiedNeg, setCopiedNeg] = useState(false);
+  const [identityOpen, setIdentityOpen] = useState(false);
 
   const copy = async (text: string, which: 'pos' | 'neg') => {
     await navigator.clipboard.writeText(text);
@@ -52,13 +63,52 @@ export function PromptOutput({ positivePrompt, negativePrompt }: PromptOutputPro
             {copiedPos ? '✓ Copied' : 'Copy'}
           </button>
         </div>
-        <div className="prompt-output">
-          {positivePrompt || (
+
+        {modulePrompt ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {/* Identity Lock — the platform's core value, always embedded */}
+            <div className="identity-lock-block">
+              <button
+                className="identity-lock-header"
+                onClick={() => setIdentityOpen((v) => !v)}
+                aria-expanded={identityOpen}
+              >
+                <span className="identity-lock-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Identity Lock
+                </span>
+                <span className="identity-lock-meta">
+                  auto-included in copy
+                  <svg
+                    width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                    style={{
+                      transform: identityOpen ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 150ms ease',
+                    }}
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </span>
+              </button>
+              {identityOpen && (
+                <div className="identity-lock-body">{identityPrompt}</div>
+              )}
+            </div>
+
+            {/* User-selected modules */}
+            <div className="prompt-output">{modulePrompt}</div>
+          </div>
+        ) : (
+          <div className="prompt-output">
             <span style={{ color: 'var(--text-muted)' }}>
               Select modules to generate your prompt...
             </span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Negative Prompt */}

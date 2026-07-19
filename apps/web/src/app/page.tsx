@@ -71,6 +71,15 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 const STANDARD_NEGATIVE =
   'low quality, blurry, bad anatomy, extra fingers, deformed face, wrong proportions, watermark, text, cartoon, anime, cgi, duplicate person, identity drift, plastic skin, different person, face swap, beautified face, airbrushed skin, altered facial features';
 
+// Auto-injected identity preservation prompt — the platform's core value.
+const IDENTITY_PROMPT =
+  '[IDENTITY LOCK] The reference image is the sole identity source — preserve exactly the same person. ' +
+  'Keep facial structure and proportions, eyes, nose, lips, jawline, skin tone and texture, ' +
+  'hairstyle, hairline and hair color, age, gender, ethnicity, hands and body proportions identical. ' +
+  'Never beautify, restyle, or alter anatomy; never generate a different person. ' +
+  'Change only what is explicitly requested below. ' +
+  'Photorealistic, natural skin detail, ultra-consistent identity.';
+
 // ============================================================
 // Main Page
 // ============================================================
@@ -148,16 +157,8 @@ export default function HomePage() {
   const currentModule = modules.find((m) => m.id === activeModule);
 
   // ── Build positive prompt ──────────────────────────────────
-  const buildPositive = () => {
+  const buildModulePrompt = () => {
     const parts: string[] = [];
-    parts.push(
-      '[IDENTITY LOCK] The reference image is the sole identity source — preserve exactly the same person. ' +
-      'Keep facial structure and proportions, eyes, nose, lips, jawline, skin tone and texture, ' +
-      'hairstyle, hairline and hair color, age, gender, ethnicity, hands and body proportions identical. ' +
-      'Never beautify, restyle, or alter anatomy; never generate a different person. ' +
-      'Change only what is explicitly requested below. ' +
-      'Photorealistic, natural skin detail, ultra-consistent identity.'
-    );
     for (const mod of modules) {
       if (mod.id === 'NEGATIVE_PROMPT') continue;
       const selId = selections[mod.id];
@@ -170,7 +171,7 @@ export default function HomePage() {
         parts.push(chunk);
       }
     }
-    return parts.length > 1 ? parts.join('\n\n') : '';
+    return parts.join('\n\n');
   };
 
   // ── Build negative prompt ──────────────────────────────────
@@ -179,7 +180,8 @@ export default function HomePage() {
     return negCustom.trim() ? `${base}, ${negCustom.trim()}` : base;
   };
 
-  const positivePrompt = buildPositive();
+  const modulePrompt = buildModulePrompt();
+  const positivePrompt = modulePrompt ? `${IDENTITY_PROMPT}\n\n${modulePrompt}` : '';
   const negativePrompt = buildNegative();
   const selectionCount = Object.values(selections).filter(Boolean).length;
 
@@ -498,7 +500,7 @@ export default function HomePage() {
           background: 'var(--bg-base)',
         }}>
           {/* Module Tabs */}
-          <div style={{
+          <div className="module-tabs" style={{
             borderBottom: '1px solid var(--border-default)',
             padding: '10px 16px',
             display: 'flex',
@@ -634,6 +636,8 @@ export default function HomePage() {
           <div style={{ padding: 14, flex: 1 }}>
             <PromptOutput
               positivePrompt={positivePrompt}
+              identityPrompt={IDENTITY_PROMPT}
+              modulePrompt={modulePrompt}
               negativePrompt={negativePrompt}
             />
           </div>
@@ -699,7 +703,7 @@ export default function HomePage() {
               color: 'var(--text-muted)',
               justifyContent: 'space-between',
             }}>
-              <span>V1 — Local Mode</span>
+              <span>ImageOS · V1</span>
               <span>{selectionCount} modules selected</span>
             </div>
           </div>
