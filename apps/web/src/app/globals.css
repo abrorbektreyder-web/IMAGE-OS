@@ -783,17 +783,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ══════════════════════════════════════════════
-   MODULE TABS — edge fade hint for horizontal scroll
+   MODULE TABS — tabs wrap to new rows (no hidden overflow)
    ══════════════════════════════════════════════ */
-.module-tabs {
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
-  mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
-}
-
-.module-tabs::-webkit-scrollbar {
-  display: none;
-}
 
 /* Identity Lock — light theme */
 [data-theme="light"] .identity-lock-block {

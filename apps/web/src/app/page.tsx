@@ -499,13 +499,13 @@ export default function HomePage() {
           overflow: 'hidden',
           background: 'var(--bg-base)',
         }}>
-          {/* Module Tabs */}
+          {/* Module Tabs — wrap to new rows so every module is always visible */}
           <div className="module-tabs" style={{
             borderBottom: '1px solid var(--border-default)',
             padding: '10px 16px',
             display: 'flex',
+            flexWrap: 'wrap',
             gap: 4,
-            overflowX: 'auto',
             flexShrink: 0,
           }}>
             {modules.map((mod) => (
