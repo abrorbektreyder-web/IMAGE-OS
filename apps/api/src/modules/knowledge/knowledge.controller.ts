@@ -10,6 +10,11 @@ export class KnowledgeController {
     return this.service.getCategories();
   }
 
+  @Get('modules')
+  getModules() {
+    return this.service.getModules();
+  }
+
   @Get('presets')
   getPresets(@Query('category') category: string) {
     return this.service.getPresetsByCategory(category);

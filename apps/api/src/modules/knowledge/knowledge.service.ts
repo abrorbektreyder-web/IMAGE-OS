@@ -9,6 +9,18 @@ export class KnowledgeService {
     return this.prisma.category.findMany({ orderBy: { sortOrder: 'asc' } });
   }
 
+  async getModules() {
+    return this.prisma.category.findMany({
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        presets: {
+          where: { isActive: true },
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
+    });
+  }
+
   async getPresetsByCategory(categorySlug: string) {
     return this.prisma.preset.findMany({
       where: { category: { slug: categorySlug }, isActive: true },
