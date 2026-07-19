@@ -307,6 +307,27 @@ export default function HomePage() {
                   overflow: 'hidden',
                 }}>
                   <a
+                    href="/tryon"
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 16px',
+                      color: 'var(--text-primary)',
+                      textDecoration: 'none',
+                      fontSize: 13,
+                      borderBottom: '1px solid var(--border-default)',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-elevated)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 7h-3a2 2 0 0 1-2-2V2"/>
+                      <path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z"/>
+                      <path d="M3 15h6"/>
+                      <path d="M3 18h6"/>
+                    </svg>
+                    Virtual Try-On (fal.ai)
+                  </a>
+                  <a
                     href="/admin/presets"
                     style={{
                       display: 'flex', alignItems: 'center', gap: 10,

@@ -4,9 +4,11 @@ import { useRef, useState } from 'react';
 
 interface ReferenceImageUploadProps {
   onUpload: (file: File, previewUrl: string) => void;
+  title?: string;
+  subtitle?: string;
 }
 
-export function ReferenceImageUpload({ onUpload }: ReferenceImageUploadProps) {
+export function ReferenceImageUpload({ onUpload, title = "Drop reference image here", subtitle = "or click to browse — JPG, PNG, WEBP" }: ReferenceImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -92,10 +94,10 @@ export function ReferenceImageUpload({ onUpload }: ReferenceImageUploadProps) {
             <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
           <p style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 500 }}>
-            Drop reference image here
+            {title}
           </p>
           <p style={{ color: 'var(--text-muted)', fontSize: 11 }}>
-            or click to browse — JPG, PNG, WEBP
+            {subtitle}
           </p>
         </>
       )}

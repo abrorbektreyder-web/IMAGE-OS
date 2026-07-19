@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProjectModule } from './modules/project/project.module';
 import { PromptComposerModule } from './modules/prompt-composer/prompt-composer.module';
 import { KnowledgeModule } from './modules/knowledge/knowledge.module';
+import { TryonModule } from './modules/tryon/tryon.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -15,6 +16,8 @@ import { PrismaModule } from './prisma/prisma.module';
     ProjectModule,
     PromptComposerModule,
     KnowledgeModule,
+    TryonModule,
   ],
 })
 export class AppModule {}
+
