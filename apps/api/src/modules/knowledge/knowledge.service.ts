@@ -21,10 +21,11 @@ export class KnowledgeService {
     });
   }
 
-  async getPresetsByCategory(categorySlug: string) {
+  async getPresetsByCategory(categorySlug?: string) {
     return this.prisma.preset.findMany({
-      where: { category: { slug: categorySlug }, isActive: true },
-      orderBy: { sortOrder: 'asc' },
+      where: categorySlug ? { category: { slug: categorySlug } } : {},
+      orderBy: [{ category: { sortOrder: 'asc' } }, { sortOrder: 'asc' }],
+      include: { category: { select: { name: true, slug: true } } },
     });
   }
 
@@ -39,5 +40,40 @@ export class KnowledgeService {
         ],
       },
     });
+  }
+
+  // ── Admin CRUD ─────────────────────────────────────
+
+  async createPreset(data: any) {
+    return this.prisma.preset.create({
+      data: {
+        categoryId: data.categoryId,
+        slug: data.slug,
+        name: data.name,
+        description: data.description || null,
+        promptChunk: data.promptChunk,
+        isActive: data.isActive ?? true,
+        sortOrder: data.sortOrder ?? 0,
+      },
+    });
+  }
+
+  async updatePreset(id: string, data: any) {
+    return this.prisma.preset.update({
+      where: { id },
+      data: {
+        ...(data.categoryId && { categoryId: data.categoryId }),
+        ...(data.slug && { slug: data.slug }),
+        ...(data.name && { name: data.name }),
+        description: data.description ?? undefined,
+        ...(data.promptChunk && { promptChunk: data.promptChunk }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
+        ...(data.sortOrder !== undefined && { sortOrder: data.sortOrder }),
+      },
+    });
+  }
+
+  async deletePreset(id: string) {
+    return this.prisma.preset.delete({ where: { id } });
   }
 }
