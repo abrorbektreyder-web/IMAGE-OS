@@ -69,7 +69,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 // Standard Negative Prompt (mirrors backend constant)
 // ============================================================
 const STANDARD_NEGATIVE =
-  'low quality, blurry, bad anatomy, extra fingers, deformed face, wrong proportions, watermark, text, cartoon, anime, cgi, duplicate person, identity drift, plastic skin';
+  'low quality, blurry, bad anatomy, extra fingers, deformed face, wrong proportions, watermark, text, cartoon, anime, cgi, duplicate person, identity drift, plastic skin, different person, face swap, beautified face, airbrushed skin, altered facial features';
 
 // ============================================================
 // Main Page
@@ -150,7 +150,14 @@ export default function HomePage() {
   // ── Build positive prompt ──────────────────────────────────
   const buildPositive = () => {
     const parts: string[] = [];
-    parts.push('[IDENTITY LOCK ACTIVE] Preserve exact person from reference image. Maintain identical facial structure, skin tone, hairstyle, and body proportions.');
+    parts.push(
+      '[IDENTITY LOCK] The reference image is the sole identity source — preserve exactly the same person. ' +
+      'Keep facial structure and proportions, eyes, nose, lips, jawline, skin tone and texture, ' +
+      'hairstyle, hairline and hair color, age, gender, ethnicity, hands and body proportions identical. ' +
+      'Never beautify, restyle, or alter anatomy; never generate a different person. ' +
+      'Change only what is explicitly requested below. ' +
+      'Photorealistic, natural skin detail, ultra-consistent identity.'
+    );
     for (const mod of modules) {
       if (mod.id === 'NEGATIVE_PROMPT') continue;
       const selId = selections[mod.id];
