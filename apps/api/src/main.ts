@@ -12,9 +12,16 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true, bodyLimit: 50 * 1024 * 1024 }), // 50MB limit for base64 images
   );
 
-  // CORS — allow Next.js frontend
+  // CORS — allow Next.js frontend (local dev + Vercel production)
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://image-os-web.vercel.app',
+  ];
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    allowedOrigins.push(process.env.NEXT_PUBLIC_APP_URL);
+  }
   app.enableCors({
-    origin: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
   });
 
