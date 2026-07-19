@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE } from '@/lib/api';
 
 type Preset = {
   id: string;
@@ -19,7 +20,7 @@ type Category = {
   slug: string;
 };
 
-const API = 'http://localhost:3001/api/v1';
+const API = API_BASE;
 
 export default function AdminPresetsPage() {
   const [presets, setPresets] = useState<Preset[]>([]);

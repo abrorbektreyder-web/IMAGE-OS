@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { ReferenceImageUpload } from '@/components/ReferenceImageUpload';
 import { PresetCard } from '@/components/PresetCard';
 import { PromptOutput } from '@/components/PromptOutput';
+import { API_BASE } from '@/lib/api';
 
 // ============================================================
 // Icon Mapping for dynamic backend categories
@@ -91,7 +92,7 @@ export default function HomePage() {
   useEffect(() => {
     async function loadModules() {
       try {
-        const res = await fetch('http://localhost:3001/api/v1/knowledge/modules');
+        const res = await fetch(`${API_BASE}/knowledge/modules`);
         const data = await res.json();
         
         // Map database schema to frontend schema

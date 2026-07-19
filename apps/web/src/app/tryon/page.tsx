@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ReferenceImageUpload } from '@/components/ReferenceImageUpload';
+import { API_BASE } from '@/lib/api';
 
 export default function TryonPage() {
   const [humanFile, setHumanFile] = useState<File | null>(null);
@@ -34,7 +35,7 @@ export default function TryonPage() {
       const humanBase64 = await toBase64(humanFile);
       const garmentBase64 = await toBase64(garmentFile);
 
-      const res = await fetch('http://localhost:3001/api/v1/tryon/run', {
+      const res = await fetch(`${API_BASE}/tryon/run`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
