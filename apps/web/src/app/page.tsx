@@ -449,7 +449,7 @@ export default function HomePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {modules.filter((m) => m.id !== 'NEGATIVE_PROMPT').map((mod) => {
                 const selId = selections[mod.id];
-                const preset = selId ? mod.presets.find((p) => p.id === selId) : null;
+                const preset = selId ? mod.presets.find((p: any) => p.id === selId) : null;
                 return (
                   <div
                     key={mod.id}
@@ -548,7 +548,7 @@ export default function HomePage() {
                     gap: 8,
                     marginBottom: 16,
                   }}>
-                    {currentModule.presets.map((preset) => (
+                    {currentModule.presets.map((preset: any) => (
                       <PresetCard
                         key={preset.id}
                         name={preset.name}
