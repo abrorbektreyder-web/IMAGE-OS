@@ -184,7 +184,7 @@ export default function HomePage() {
       flexDirection: 'column',
     }}>
       {/* ── Top Navbar ────────────────────────────────────── */}
-      <header style={{
+      <header className="app-header" style={{
         height: 56,
         borderBottom: '1px solid var(--border-default)',
         background: 'rgba(8,8,15,0.9)',
@@ -231,7 +231,7 @@ export default function HomePage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          <span className="hide-mobile" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             {selectionCount} module{selectionCount !== 1 ? 's' : ''} selected
           </span>
 
@@ -379,19 +379,12 @@ export default function HomePage() {
       </header>
 
       {/* ── Main Layout ───────────────────────────────────── */}
-      <main style={{
-        flex: 1,
-        display: 'grid',
-        gridTemplateColumns: '260px 1fr 360px',
-        gap: 0,
-        height: 'calc(100dvh - 56px)',
-        overflow: 'hidden',
-      }}>
+      <main className="app-main">
 
         {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             LEFT PANEL — Reference Image + Project Info
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <aside style={{
+        <aside className="left-panel" style={{
           borderRight: '1px solid var(--border-default)',
           background: 'var(--bg-surface)',
           display: 'flex',
@@ -599,7 +592,7 @@ export default function HomePage() {
         {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             RIGHT PANEL — Prompt Output
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <aside style={{
+        <aside className="right-panel" style={{
           borderLeft: '1px solid var(--border-default)',
           background: 'var(--bg-surface)',
           display: 'flex',

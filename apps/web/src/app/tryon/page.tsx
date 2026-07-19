@@ -95,7 +95,7 @@ export default function TryonPage() {
       </header>
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+        <div className="tryon-grid">
           
           {/* Left: Inputs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>

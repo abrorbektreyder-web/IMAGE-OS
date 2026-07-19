@@ -665,3 +665,61 @@ h1, h2, h3, h4, h5, h6 {
     @apply font-sans;
   }
 }
+/* ══════════════════════════════════════════════
+   RESPONSIVE LAYOUT — tablet & mobile
+   ══════════════════════════════════════════════ */
+
+/* Desktop default: 3-column workspace */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 360px;
+  height: calc(100dvh - 56px);
+  overflow: hidden;
+}
+
+/* Try-on page: two columns side by side */
+.tryon-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* ── Tablet (≤1023px): 2 columns, prompt panel drops below ── */
+@media (max-width: 1023px) {
+  .app-main {
+    grid-template-columns: 240px 1fr;
+    height: auto;
+    overflow: visible;
+  }
+  .right-panel {
+    grid-column: 1 / -1;
+    border-left: none !important;
+    border-top: 1px solid var(--border-default);
+  }
+}
+
+/* ── Mobile (≤767px): single column stack ── */
+@media (max-width: 767px) {
+  .app-main {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  .left-panel {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .app-header {
+    padding: 0 14px !important;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
+  .tryon-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
