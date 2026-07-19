@@ -77,6 +77,7 @@ export default function HomePage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   
   const [modules, setModules] = useState<any[]>([]);
   const [loadingModules, setLoadingModules] = useState(true);
@@ -90,7 +91,7 @@ export default function HomePage() {
   useEffect(() => {
     async function loadModules() {
       try {
-        const res = await fetch('http://localhost:4000/api/v1/knowledge/modules');
+        const res = await fetch('http://localhost:3001/api/v1/knowledge/modules');
         const data = await res.json();
         
         // Map database schema to frontend schema
@@ -272,13 +273,85 @@ export default function HomePage() {
             )}
           </button>
 
-          <div style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 12, fontWeight: 600, color: 'white',
-          }}>
-            U
+          {/* User dropdown */}
+          <div style={{ position: 'relative' }}>
+            <div
+              onClick={() => setUserMenuOpen(o => !o)}
+              style={{
+                width: 32, height: 32, borderRadius: '50%',
+                background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, fontWeight: 600, color: 'white',
+                cursor: 'pointer', userSelect: 'none',
+              }}
+            >
+              U
+            </div>
+
+            {userMenuOpen && (
+              <>
+                {/* Backdrop */}
+                <div
+                  style={{ position: 'fixed', inset: 0, zIndex: 99 }}
+                  onClick={() => setUserMenuOpen(false)}
+                />
+                {/* Dropdown */}
+                <div style={{
+                  position: 'absolute', top: 40, right: 0,
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-default)',
+                  borderRadius: 10,
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+                  minWidth: 180,
+                  zIndex: 100,
+                  overflow: 'hidden',
+                }}>
+                  <a
+                    href="/admin/presets"
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 16px',
+                      color: 'var(--text-primary)',
+                      textDecoration: 'none',
+                      fontSize: 13,
+                      borderBottom: '1px solid var(--border-default)',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-elevated)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Admin Panel
+                  </a>
+                  <button
+                    onClick={async () => {
+                      const { authClient } = await import('@/lib/auth-client');
+                      await authClient.signOut();
+                      window.location.href = '/login';
+                    }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 16px', width: '100%',
+                      background: 'none', border: 'none',
+                      color: '#F87171',
+                      fontSize: 13, cursor: 'pointer',
+                      textAlign: 'left',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(248,113,113,0.08)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                      <polyline points="16 17 21 12 16 7"/>
+                      <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Chiqish
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </header>

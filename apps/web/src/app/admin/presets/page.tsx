@@ -19,7 +19,7 @@ type Category = {
   slug: string;
 };
 
-const API = 'http://localhost:4000/api/v1';
+const API = 'http://localhost:3001/api/v1';
 
 export default function AdminPresetsPage() {
   const [presets, setPresets] = useState<Preset[]>([]);
