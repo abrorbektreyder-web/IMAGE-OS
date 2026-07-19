@@ -17,11 +17,13 @@ export class TryonController {
   async run(@Body() body: any) {
     const { humanImageBase64, garmentImageBase64, mimeType = 'image/jpeg', clothType = 'upper' } = body;
 
-    const [humanUrl, garmentUrl] = await Promise.all([
-      this.tryonService.uploadToFal(humanImageBase64, mimeType),
-      this.tryonService.uploadToFal(garmentImageBase64, mimeType),
-    ]);
+    const resultImageUrl = await this.tryonService.runTryon(
+      humanImageBase64,
+      garmentImageBase64,
+      mimeType,
+      clothType
+    );
 
-    return this.tryonService.runTryon(humanUrl, garmentUrl, clothType);
+    return { imageUrl: resultImageUrl };
   }
 }

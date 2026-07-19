@@ -9,7 +9,10 @@ import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [
     // Load .env globally
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ 
+      isGlobal: true,
+      envFilePath: ['apps/api/.env', '.env'],
+    }),
 
     // Core platform modules
     PrismaModule,
