@@ -8,7 +8,7 @@ interface ReferenceImageUploadProps {
   subtitle?: string;
 }
 
-export function ReferenceImageUpload({ onUpload, title = "Drop reference image here", subtitle = "or click to browse — JPG, PNG, WEBP" }: ReferenceImageUploadProps) {
+export function ReferenceImageUpload({ onUpload, title = "Namuna rasmni shu yerga tashlang", subtitle = "yoki bosib tanlang — JPG, PNG, WEBP" }: ReferenceImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -82,7 +82,7 @@ export function ReferenceImageUpload({ onUpload, title = "Drop reference image h
               backdropFilter: 'blur(8px)',
             }}
           >
-            Change
+            Almashtirish
           </button>
         </div>
       ) : (

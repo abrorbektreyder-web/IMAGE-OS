@@ -48,7 +48,7 @@ export default function LoginPage() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: 24,
-      fontFamily: "'Inter', sans-serif",
+      fontFamily: "'Manrope', sans-serif",
     }}>
       {/* Background glow */}
       <div style={{

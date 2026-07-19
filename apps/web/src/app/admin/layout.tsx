@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div style={{
       minHeight: '100dvh',
       background: '#F9FAFB',
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: "'Manrope', -apple-system, BlinkMacSystemFont, sans-serif",
       display: 'flex',
     }}>
       {/* Sidebar */}

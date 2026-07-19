@@ -59,7 +59,7 @@ export default function TryonPage() {
       }
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Something went wrong');
+      setError(err.message || 'Xatolik yuz berdi');
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ export default function TryonPage() {
       minHeight: '100dvh',
       background: 'var(--bg-default)',
       color: 'var(--text-primary)',
-      fontFamily: 'var(--font-inter)',
+      fontFamily: "'Manrope', sans-serif",
     }}>
       <header style={{
         height: 56,
@@ -86,10 +86,10 @@ export default function TryonPage() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            <span style={{ fontSize: 14, fontWeight: 600 }}>Back</span>
+            <span style={{ fontSize: 14, fontWeight: 600 }}>Orqaga</span>
           </a>
           <h1 style={{ fontSize: 16, fontWeight: 600, margin: 0, paddingLeft: 12, borderLeft: '1px solid var(--border-default)' }}>
-            Virtual Try-On <span style={{ fontSize: 10, background: 'var(--bg-elevated)', padding: '2px 6px', borderRadius: 4, marginLeft: 8 }}>IDM-VTON</span>
+            Virtual kiyib ko'rish <span style={{ fontSize: 10, background: 'var(--bg-elevated)', padding: '2px 6px', borderRadius: 4, marginLeft: 8 }}>IDM-VTON</span>
           </h1>
         </div>
       </header>
@@ -100,27 +100,27 @@ export default function TryonPage() {
           {/* Left: Inputs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>1. Upload Person Image</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>1. Odam rasmini yuklang</h2>
               <ReferenceImageUpload 
                 onUpload={(file, url) => { setHumanFile(file); setHumanPreview(url); }}
-                title="Drop person image here"
-                subtitle="Clear front-facing photo of a person"
+                title="Odam rasmini shu yerga tashlang"
+                subtitle="Old tomondan olingan aniq surat"
               />
             </div>
 
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>2. Upload Garment Image</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>2. Kiyim rasmini yuklang</h2>
               <ReferenceImageUpload 
                 onUpload={(file, url) => { setGarmentFile(file); setGarmentPreview(url); }}
-                title="Drop clothing image here"
-                subtitle="Clear image of the clothing item (flat lay or on mannequin)"
+                title="Kiyim rasmini shu yerga tashlang"
+                subtitle="Kiyimning aniq surati (tekis yoki manekenda)"
               />
             </div>
 
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>3. Select Cloth Type</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>3. Kiyim turini tanlang</h2>
               <div style={{ display: 'flex', gap: 12 }}>
-                {['upper', 'lower', 'dresses'].map(type => (
+                {([['upper','Ustki'],['lower','Pastki'],['dresses',"Ko'ylak"]] as [string,string][]).map(([type, typeLabel]) => (
                   <button
                     key={type}
                     onClick={() => setClothType(type)}
@@ -136,7 +136,7 @@ export default function TryonPage() {
                       textTransform: 'capitalize'
                     }}
                   >
-                    {type}
+                    {typeLabel}
                   </button>
                 ))}
               </div>
@@ -169,14 +169,14 @@ export default function TryonPage() {
                     <circle cx="12" cy="12" r="10" strokeOpacity="0.25"/>
                     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                   </svg>
-                  Processing Try-On...
+                  Ishlanmoqda...
                 </>
               ) : (
                 <>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                   </svg>
-                  Generate Try-On
+                  Kiydirib ko'rish
                 </>
               )}
             </button>
@@ -209,7 +209,7 @@ export default function TryonPage() {
             ) : loading ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, color: 'var(--text-muted)' }}>
                 <div className="animate-pulse" style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--bg-elevated)' }} />
-                <p style={{ fontSize: 14 }}>AI is rendering your outfit...</p>
+                <p style={{ fontSize: 14 }}>AI kiyimni chizmoqda...</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, color: 'var(--text-muted)' }}>
@@ -218,7 +218,7 @@ export default function TryonPage() {
                   <circle cx="8.5" cy="8.5" r="1.5"/>
                   <polyline points="21 15 16 10 5 21"/>
                 </svg>
-                <p style={{ fontSize: 14 }}>Result will appear here</p>
+                <p style={{ fontSize: 14 }}>Natija shu yerda chiqadi</p>
               </div>
             )}
             
@@ -252,7 +252,7 @@ export default function TryonPage() {
                   <polyline points="7 10 12 15 17 10"/>
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                Download HD
+                HD yuklab olish
               </a>
             )}
           </div>

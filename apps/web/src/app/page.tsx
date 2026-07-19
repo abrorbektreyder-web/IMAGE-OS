@@ -81,6 +81,24 @@ const IDENTITY_PROMPT =
   'Photorealistic, natural skin detail, ultra-consistent identity.';
 
 // ============================================================
+// O'zbekcha modul nomlari (faqat UI uchun — prompt inglizcha qoladi,
+// chunki AI modellari inglizcha promptni aniqroq tushunadi)
+// ============================================================
+const UZ_MODULE_LABELS: Record<string, string> = {
+  WARDROBE: 'Kiyim',
+  LOCATION: 'Makon',
+  TIME_OF_DAY: 'Kun vaqti',
+  WEATHER: 'Ob-havo',
+  POSE: 'Poza',
+  LIGHTING: "Yorug'lik",
+  CAMERA: 'Kamera',
+  NEGATIVE_PROMPT: 'Negativ',
+};
+
+const uzLabel = (mod: { id: string; label: string }) =>
+  UZ_MODULE_LABELS[mod.id] ?? mod.label;
+
+// ============================================================
 // Main Page
 // ============================================================
 export default function HomePage() {
@@ -222,7 +240,7 @@ export default function HomePage() {
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
           </div>
-          <span style={{ fontSize: 15, fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif', letterSpacing: '-0.01em' }}>
+          <span style={{ fontSize: 15, fontWeight: 700, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.01em' }}>
             Image<span style={{ color: 'var(--accent-primary)' }}>OS</span>
           </span>
           <span style={{
@@ -241,13 +259,13 @@ export default function HomePage() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span className="hide-mobile" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            {selectionCount} module{selectionCount !== 1 ? 's' : ''} selected
+            {selectionCount} ta modul tanlandi
           </span>
 
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            title={theme === 'dark' ? "Yorug' rejimga o'tish" : "Tungi rejimga o'tish"}
             style={{
               width: 36,
               height: 36,
@@ -335,7 +353,7 @@ export default function HomePage() {
                       <path d="M3 15h6"/>
                       <path d="M3 18h6"/>
                     </svg>
-                    Virtual Try-On (fal.ai)
+                    Virtual kiyib ko'rish
                   </a>
                   <a
                     href="/admin/presets"
@@ -404,7 +422,7 @@ export default function HomePage() {
           {/* Section header */}
           <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid var(--border-default)' }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-              Identity Source
+              Qiyofa manbasi
             </p>
             <ReferenceImageUpload onUpload={handleUpload} />
 
@@ -422,7 +440,7 @@ export default function HomePage() {
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#22C55E" strokeWidth="2">
                   <polyline points="2,6 5,9 10,3"/>
                 </svg>
-                <span style={{ fontSize: 11, color: '#86EFAC', fontWeight: 500 }}>Identity Lock Active</span>
+                <span style={{ fontSize: 11, color: '#86EFAC', fontWeight: 500 }}>Qiyofa himoyasi faol</span>
               </div>
             )}
           </div>
@@ -430,7 +448,7 @@ export default function HomePage() {
           {/* Identity Lock Info */}
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border-default)' }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-              Identity Lock
+              Qiyofa himoyasi
             </p>
             <div style={{
               background: 'rgba(139,92,246,0.06)',
@@ -439,7 +457,7 @@ export default function HomePage() {
               padding: '10px 12px',
             }}>
               <p style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                🔒 Facial structure, skin tone, hairstyle, and body proportions are automatically preserved — no configuration needed.
+                🔒 Yuz tuzilishi, teri rangi, soch turmagi va tana proporsiyalari avtomatik saqlanadi — sozlash shart emas.
               </p>
             </div>
           </div>
@@ -447,7 +465,7 @@ export default function HomePage() {
           {/* Selection Summary */}
           <div style={{ padding: '14px 16px', flex: 1 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-              Selected
+              Tanlanganlar
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {modules.filter((m) => m.id !== 'NEGATIVE_PROMPT').map((mod) => {
@@ -473,14 +491,14 @@ export default function HomePage() {
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 0 }}>
-                        {mod.label}
+                        {uzLabel(mod)}
                       </p>
                       {preset ? (
                         <p style={{ fontSize: 11, color: 'var(--accent-neon)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {preset.name}
                         </p>
                       ) : (
-                        <p style={{ fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic' }}>Not selected</p>
+                        <p style={{ fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic' }}>Tanlanmagan</p>
                       )}
                     </div>
                   </div>
@@ -515,7 +533,7 @@ export default function HomePage() {
                 onClick={() => setActiveModule(mod.id)}
               >
                 {mod.icon}
-                {mod.label}
+                {uzLabel(mod)}
                 {selections[mod.id] && mod.id !== 'NEGATIVE_PROMPT' && (
                   <span style={{
                     width: 6, height: 6, borderRadius: '50%',
@@ -534,12 +552,12 @@ export default function HomePage() {
               <div className="animate-fade-in" key={activeModule}>
                 <div style={{ marginBottom: 14 }}>
                   <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
-                    {currentModule.label}
+                    {uzLabel(currentModule)}
                   </h2>
                   <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                     {activeModule === 'NEGATIVE_PROMPT'
-                      ? 'Add custom negative terms to further refine your output.'
-                      : `Choose a ${currentModule.label.toLowerCase()} preset or add custom notes below.`}
+                      ? "Natijani aniqlashtirish uchun qo'shimcha negativ so'zlar kiriting."
+                      : "Tayyor variantni tanlang yoki quyida o'z izohingizni yozing."}
                   </p>
                 </div>
 
@@ -567,20 +585,20 @@ export default function HomePage() {
                 {activeModule === 'NEGATIVE_PROMPT' ? (
                   <div>
                     <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>
-                      Additional negative terms (comma separated)
+                      Qo'shimcha negativ so'zlar (vergul bilan, inglizcha)
                     </label>
                     <textarea
                       className="imageos-textarea"
                       value={negCustom}
                       onChange={(e) => setNegCustom(e.target.value)}
-                      placeholder="e.g. sunglasses, hat, beard, smiling..."
+                      placeholder="masalan: sunglasses, hat, beard, smiling..."
                       rows={4}
                     />
                   </div>
                 ) : (
                   <div>
                     <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>
-                      Custom note for {currentModule.label} (optional)
+                      {uzLabel(currentModule)} uchun qo'shimcha izoh (ixtiyoriy, inglizcha)
                     </label>
                     <textarea
                       className="imageos-textarea"
@@ -588,7 +606,7 @@ export default function HomePage() {
                       onChange={(e) =>
                         setCustomNotes((prev) => ({ ...prev, [activeModule]: e.target.value }))
                       }
-                      placeholder={`e.g. "knee-length", "unbuttoned", "with hood up"...`}
+                      placeholder={`masalan: "knee-length", "unbuttoned", "with hood up"...`}
                       rows={3}
                     />
                   </div>
@@ -616,9 +634,9 @@ export default function HomePage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 700 }}>Prompt Output</p>
+                <p style={{ fontSize: 13, fontWeight: 700 }}>Prompt natijasi</p>
                 <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-                  Updates in real-time as you select
+                  Tanlovingizga qarab real vaqtda yangilanadi
                 </p>
               </div>
               {positivePrompt && (
@@ -659,7 +677,7 @@ export default function HomePage() {
                   <line x1="12" y1="8" x2="12" y2="12"/>
                   <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                Upload a reference image to activate generation
+                Generatsiyani faollashtirish uchun namuna rasm yuklang
               </div>
             )}
             
@@ -682,7 +700,7 @@ export default function HomePage() {
                 opacity: referenceFile ? 1 : 0.6,
                 boxShadow: referenceFile ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
               }}
-              onClick={() => alert(`✨ Generation API integration (IDM-VTON) is planned for Sprint 5!\n\nPrompt:\n${positivePrompt}`)}
+              onClick={() => alert(`✨ Rasm generatsiyasi tez orada qo'shiladi!\n\nHozircha promptni "Nusxalash" tugmasi bilan olib, istalgan AI vositasida ishlating.\n\nPrompt:\n${positivePrompt}`)}
               onMouseEnter={(e) => {
                 if(referenceFile) e.currentTarget.style.transform = 'translateY(-1px)';
               }}
@@ -693,7 +711,7 @@ export default function HomePage() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
               </svg>
-              Generate Image
+              Rasm yaratish
             </button>
 
             <div style={{
@@ -704,7 +722,7 @@ export default function HomePage() {
               justifyContent: 'space-between',
             }}>
               <span>ImageOS · V1</span>
-              <span>{selectionCount} modules selected</span>
+              <span>{selectionCount} ta modul tanlandi</span>
             </div>
           </div>
         </aside>

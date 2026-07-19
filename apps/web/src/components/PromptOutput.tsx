@@ -44,7 +44,7 @@ export function PromptOutput({
           marginBottom: 6,
         }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#86EFAC', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            ✦ Positive Prompt
+            ✦ Pozitiv prompt
           </span>
           <button
             onClick={() => copy(positivePrompt, 'pos')}
@@ -60,7 +60,7 @@ export function PromptOutput({
               transition: 'all 150ms ease',
             }}
           >
-            {copiedPos ? '✓ Copied' : 'Copy'}
+            {copiedPos ? '✓ Nusxalandi' : 'Nusxalash'}
           </button>
         </div>
 
@@ -78,10 +78,10 @@ export function PromptOutput({
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
-                  Identity Lock
+                  Qiyofa himoyasi
                 </span>
                 <span className="identity-lock-meta">
-                  auto-included in copy
+                  nusxaga avto qo'shiladi
                   <svg
                     width="12" height="12" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -105,7 +105,7 @@ export function PromptOutput({
         ) : (
           <div className="prompt-output">
             <span style={{ color: 'var(--text-muted)' }}>
-              Select modules to generate your prompt...
+              Prompt yaratish uchun modullarni tanlang...
             </span>
           </div>
         )}
@@ -120,7 +120,7 @@ export function PromptOutput({
           marginBottom: 6,
         }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#FCA5A5', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            ✦ Negative Prompt
+            ✦ Negativ prompt
           </span>
           <button
             onClick={() => copy(negativePrompt, 'neg')}
@@ -136,13 +136,13 @@ export function PromptOutput({
               transition: 'all 150ms ease',
             }}
           >
-            {copiedNeg ? '✓ Copied' : 'Copy'}
+            {copiedNeg ? '✓ Nusxalandi' : 'Nusxalash'}
           </button>
         </div>
         <div className="prompt-output">
           {negativePrompt || (
             <span style={{ color: 'var(--text-muted)' }}>
-              Negative prompt will appear here...
+              Negativ prompt shu yerda chiqadi...
             </span>
           )}
         </div>
