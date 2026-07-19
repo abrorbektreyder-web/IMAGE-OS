@@ -1,0 +1,263 @@
+// This is your Prisma schema file
+// Learn more about it at https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. USER & WORKSPACE (Multi-tenant support)
+// ==========================================
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  name      String?
+  avatarUrl String?
+  role      UserRole   @default(USER)
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  memberships   WorkspaceMember[]
+  subscriptions Subscription[]
+  favorites     FavoritePreset[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  CREATIVE_DIRECTOR
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  WorkspaceMember[]
+  projects Project[]
+
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id          String     @id @default(uuid())
+  workspaceId String
+  userId      String
+  role        MemberRole @default(MEMBER)
+  joinedAt    DateTime   @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_members")
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+// ==========================================
+// 2. PROJECT & VISUAL COMPOSER
+// ==========================================
+
+model Project {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  description String?
+  categoryId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace      Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  category       Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  referenceImage ReferenceImage?
+  selections     ModuleSelection[]
+  prompts        PromptHistory[]
+  exports        ExportRecord[]
+
+  @@map("projects")
+}
+
+model ReferenceImage {
+  id         String   @id @default(uuid())
+  projectId  String   @unique
+  storageUrl String
+  filename   String
+  fileSize   Int
+  mimeType   String
+  width      Int?
+  height     Int?
+  createdAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("reference_images")
+}
+
+model ModuleSelection {
+  id          String   @id @default(uuid())
+  projectId   String
+  moduleName  String   // e.g. "CAMERA", "LIGHTING", "WARDROBE"
+  presetId    String?
+  customValue String?  // User's custom manual notes
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  preset  Preset? @relation(fields: [presetId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, moduleName])
+  @@map("module_selections")
+}
+
+// ==========================================
+// 3. KNOWLEDGE BASE & RULES ENGINE
+// ==========================================
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique // e.g. "Camera", "Lighting", "Fashion"
+  slug     String    @unique
+  icon     String?   // emoji or icon name
+  sortOrder Int      @default(0)
+
+  projects Project[]
+  presets  Preset[]
+
+  @@map("categories")
+}
+
+model Preset {
+  id          String   @id @default(uuid())
+  categoryId  String
+  name        String
+  description String?
+  promptChunk String   // The actual visual prompt fragment
+  negPrompt   String?  // Exclusions specific to this preset
+  tags        String[]
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  category   Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  selections ModuleSelection[]
+  favorites  FavoritePreset[]
+
+  @@map("presets")
+}
+
+model Rule {
+  id             String     @id @default(uuid())
+  conditionField String     // e.g., "LIGHTING"
+  conditionValue String     // e.g., "Midday Sun"
+  actionType     RuleAction
+  targetField    String     // e.g., "TIME_OF_DAY"
+  targetValue    String     // e.g., "Night"
+  message        String?    // Warning message shown to user
+  isActive       Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+
+  @@map("rules")
+}
+
+enum RuleAction {
+  RECOMMEND
+  EXCLUDE
+  WARN
+  CONFLICT
+}
+
+// ==========================================
+// 4. PROMPT OUTPUT & HISTORY
+// ==========================================
+
+model PromptHistory {
+  id             String   @id @default(uuid())
+  projectId      String
+  positivePrompt String   @db.Text
+  negativePrompt String   @db.Text
+  version        Int      @default(1)
+  createdAt      DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("prompt_history")
+}
+
+model FavoritePreset {
+  id        String   @id @default(uuid())
+  userId    String
+  presetId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preset Preset @relation(fields: [presetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, presetId])
+  @@map("favorite_presets")
+}
+
+model ExportRecord {
+  id        String   @id @default(uuid())
+  projectId String
+  format    String   // "TXT", "JSON", "CLIPBOARD"
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("export_records")
+}
+
+// ==========================================
+// 5. BILLING & SUBSCRIPTIONS
+// ==========================================
+
+model Subscription {
+  id        String             @id @default(uuid())
+  userId    String
+  plan      SubscriptionPlan   @default(FREE)
+  status    SubscriptionStatus @default(ACTIVE)
+  credits   Int                @default(10)
+  renewDate DateTime
+  createdAt DateTime           @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  STUDIO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
