@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -153,6 +152,7 @@ model Preset {
   id          String   @id @default(uuid())
   categoryId  String
   name        String
+  slug        String   @unique
   description String?
   promptChunk String   // The actual visual prompt fragment
   negPrompt   String?  // Exclusions specific to this preset

@@ -6,152 +6,63 @@ import { PresetCard } from '@/components/PresetCard';
 import { PromptOutput } from '@/components/PromptOutput';
 
 // ============================================================
-// Static preset data (will come from API in V2)
+// Icon Mapping for dynamic backend categories
 // ============================================================
-const MODULES = [
-  {
-    id: 'WARDROBE',
-    label: 'Wardrobe',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'w1', name: 'Silk Evening Gown', description: 'Floor-length, deep navy, off-shoulder' },
-      { id: 'w2', name: 'Casual Linen Shirt', description: 'Relaxed fit, cream white' },
-      { id: 'w3', name: 'Leather Biker Jacket', description: 'Black, fitted, moto-style' },
-      { id: 'w4', name: 'Athleisure Set', description: 'Sports bra + leggings, minimal' },
-      { id: 'w5', name: 'Business Suit', description: 'Tailored charcoal, slim fit' },
-      { id: 'w6', name: 'Summer Dress', description: 'Floral midi, flowing fabric' },
-    ],
-  },
-  {
-    id: 'LOCATION',
-    label: 'Location',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-        <circle cx="12" cy="10" r="3"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'l1', name: 'Penthouse Rooftop', description: 'Manhattan skyline, dusk' },
-      { id: 'l2', name: 'Parisian Street', description: 'Cobblestone, Haussmann buildings' },
-      { id: 'l3', name: 'Luxury Bedroom', description: 'Marble, king-size, ambient lighting' },
-      { id: 'l4', name: 'Desert Landscape', description: 'Red sand dunes, golden hour' },
-      { id: 'l5', name: 'Modern Studio', description: 'White backdrop, seamless floor' },
-      { id: 'l6', name: 'Tropical Beach', description: 'Turquoise water, palm trees' },
-    ],
-  },
-  {
-    id: 'TIME_OF_DAY',
-    label: 'Time of Day',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      </svg>
-    ),
-    presets: [
-      { id: 't1', name: 'Golden Hour', description: 'Warm glow, 30 min before sunset' },
-      { id: 't2', name: 'Blue Hour', description: 'Twilight, cool blue tones' },
-      { id: 't3', name: 'Midday Sun', description: 'Harsh overhead, high contrast' },
-      { id: 't4', name: 'Overcast Morning', description: 'Soft diffused, no shadows' },
-      { id: 't5', name: 'Night', description: 'Artificial lighting, dark background' },
-      { id: 't6', name: 'Sunrise', description: 'Pale pink & orange horizon' },
-    ],
-  },
-  {
-    id: 'WEATHER',
-    label: 'Weather',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'we1', name: 'Clear Sky', description: 'No clouds, vivid colors' },
-      { id: 'we2', name: 'Light Rain', description: 'Wet streets, soft reflections' },
-      { id: 'we3', name: 'Heavy Rain', description: 'Dramatic storm, rain streaks' },
-      { id: 'we4', name: 'Light Snow', description: 'Snowflakes, winter mood' },
-      { id: 'we5', name: 'Fog / Mist', description: 'Ethereal, reduced visibility' },
-      { id: 'we6', name: 'Windy', description: 'Hair and clothes in motion' },
-    ],
-  },
-  {
-    id: 'POSE',
-    label: 'Pose',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="5" r="2"/>
-        <path d="M10.5 7.5L8 17l4-2 4 2-2.5-9.5"/>
-        <line x1="12" y1="15" x2="12" y2="21"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'p1', name: 'Walking Forward', description: 'Natural stride, confident' },
-      { id: 'p2', name: 'Standing Straight', description: 'Frontal, composed, editorial' },
-      { id: 'p3', name: 'Sitting Casually', description: 'Relaxed seated, candid' },
-      { id: 'p4', name: 'Looking Over Shoulder', description: '3/4 back view, glancing' },
-      { id: 'p5', name: 'Dynamic Action', description: 'Movement blur, energetic' },
-      { id: 'p6', name: 'Lying Down', description: 'Horizontal, resting mood' },
-    ],
-  },
-  {
-    id: 'LIGHTING',
-    label: 'Lighting',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'li1', name: 'Rembrandt Lighting', description: 'Dramatic triangle shadow on cheek' },
-      { id: 'li2', name: 'Butterfly Lighting', description: 'Overhead, glamour shadow under nose' },
-      { id: 'li3', name: 'Rim / Backlight', description: 'Edge glow, silhouette definition' },
-      { id: 'li4', name: 'Natural Window', description: 'Soft side lighting, realistic' },
-      { id: 'li5', name: 'Neon RGB', description: 'Cyberpunk multi-color gels' },
-      { id: 'li6', name: 'Cinematic Moody', description: 'Low-key, deep shadows, atmosphere' },
-    ],
-  },
-  {
-    id: 'CAMERA',
-    label: 'Camera',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-        <circle cx="12" cy="13" r="4"/>
-      </svg>
-    ),
-    presets: [
-      { id: 'c1', name: '85mm Portrait', description: 'f/1.4, shallow DOF, creamy bokeh' },
-      { id: 'c2', name: '35mm Street', description: 'f/8, everything in focus, wide' },
-      { id: 'c3', name: '50mm Standard', description: 'Natural perspective, versatile' },
-      { id: 'c4', name: '24mm Wide Angle', description: 'Environmental, dramatic foreground' },
-      { id: 'c5', name: '200mm Telephoto', description: 'Compressed background, isolated subject' },
-      { id: 'c6', name: 'Macro Close-up', description: 'Extreme detail, texture focus' },
-    ],
-  },
-  {
-    id: 'NEGATIVE_PROMPT',
-    label: 'Negative',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-      </svg>
-    ),
-    presets: [],
-  },
-];
+const ICON_MAP: Record<string, React.ReactNode> = {
+  shirt: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
+    </svg>
+  ),
+  'map-pin': (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+  ),
+  clock: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+  ),
+  cloud: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+    </svg>
+  ),
+  user: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="5" r="2"/>
+      <path d="M10.5 7.5L8 17l4-2 4 2-2.5-9.5"/>
+      <line x1="12" y1="15" x2="12" y2="21"/>
+    </svg>
+  ),
+  zap: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  camera: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+  ),
+  negative: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+    </svg>
+  )
+};
 
 // ============================================================
 // Standard Negative Prompt (mirrors backend constant)
@@ -166,10 +77,52 @@ export default function HomePage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  
+  const [modules, setModules] = useState<any[]>([]);
+  const [loadingModules, setLoadingModules] = useState(true);
+  
   const [activeModule, setActiveModule] = useState('WARDROBE');
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [customNotes, setCustomNotes] = useState<Record<string, string>>({});
   const [negCustom, setNegCustom] = useState('');
+
+  // Fetch modules from API
+  useEffect(() => {
+    async function loadModules() {
+      try {
+        const res = await fetch('http://localhost:4000/api/v1/knowledge/modules');
+        const data = await res.json();
+        
+        // Map database schema to frontend schema
+        const mappedModules = data.map((mod: any) => ({
+          id: mod.slug,
+          label: mod.name,
+          icon: ICON_MAP[mod.icon] || ICON_MAP['shirt'],
+          presets: mod.presets.map((p: any) => ({
+            id: p.slug,
+            name: p.name,
+            description: p.description,
+            promptChunk: p.promptChunk
+          })),
+        }));
+
+        // Append Negative Prompt virtual module
+        mappedModules.push({
+          id: 'NEGATIVE_PROMPT',
+          label: 'Negative',
+          icon: ICON_MAP['negative'],
+          presets: [],
+        });
+
+        setModules(mappedModules);
+      } catch (err) {
+        console.error("Failed to load modules", err);
+      } finally {
+        setLoadingModules(false);
+      }
+    }
+    loadModules();
+  }, []);
 
   // Apply theme to <html> element
   useEffect(() => {
@@ -190,16 +143,16 @@ export default function HomePage() {
     }));
   };
 
-  const currentModule = MODULES.find((m) => m.id === activeModule);
+  const currentModule = modules.find((m) => m.id === activeModule);
 
   // ── Build positive prompt ──────────────────────────────────
   const buildPositive = () => {
     const parts: string[] = [];
     parts.push('[IDENTITY LOCK ACTIVE] Preserve exact person from reference image. Maintain identical facial structure, skin tone, hairstyle, and body proportions.');
-    for (const mod of MODULES) {
+    for (const mod of modules) {
       if (mod.id === 'NEGATIVE_PROMPT') continue;
       const selId = selections[mod.id];
-      const preset = selId ? mod.presets.find((p) => p.id === selId) : null;
+      const preset = selId ? mod.presets.find((p: any) => p.id === selId) : null;
       const note = customNotes[mod.id]?.trim();
       if (preset || note) {
         let chunk = '';
@@ -400,7 +353,7 @@ export default function HomePage() {
               Selected
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {MODULES.filter((m) => m.id !== 'NEGATIVE_PROMPT').map((mod) => {
+              {modules.filter((m) => m.id !== 'NEGATIVE_PROMPT').map((mod) => {
                 const selId = selections[mod.id];
                 const preset = selId ? mod.presets.find((p) => p.id === selId) : null;
                 return (
@@ -458,7 +411,7 @@ export default function HomePage() {
             overflowX: 'auto',
             flexShrink: 0,
           }}>
-            {MODULES.map((mod) => (
+            {modules.map((mod) => (
               <button
                 key={mod.id}
                 className={`module-tab${activeModule === mod.id ? ' active' : ''}`}
@@ -590,31 +543,69 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Status info */}
+          {/* Action / Generate */}
           <div style={{
-            padding: '12px 14px',
+            padding: '16px 16px',
             borderTop: '1px solid var(--border-default)',
             flexShrink: 0,
+            background: 'var(--bg-card)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
           }}>
             {!referenceFile && (
-              <div className="badge-info" style={{ width: '100%', justifyContent: 'flex-start', marginBottom: 8 }}>
+              <div className="badge-info" style={{ width: '100%', justifyContent: 'flex-start' }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10"/>
                   <line x1="12" y1="8" x2="12" y2="12"/>
                   <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                Upload a reference image to activate Identity Lock
+                Upload a reference image to activate generation
               </div>
             )}
+            
+            <button 
+              disabled={!referenceFile}
+              style={{
+                background: referenceFile ? 'linear-gradient(135deg, #6366F1, #8B5CF6)' : 'var(--bg-surface)',
+                color: referenceFile ? '#FFF' : 'var(--text-muted)',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontWeight: 600,
+                fontSize: 14,
+                border: referenceFile ? 'none' : '1px solid var(--border-default)',
+                cursor: referenceFile ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                transition: 'all 0.2s',
+                opacity: referenceFile ? 1 : 0.6,
+                boxShadow: referenceFile ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
+              }}
+              onClick={() => alert(`✨ Generation API integration (IDM-VTON) is planned for Sprint 5!\n\nPrompt:\n${positivePrompt}`)}
+              onMouseEnter={(e) => {
+                if(referenceFile) e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                if(referenceFile) e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              Generate Image
+            </button>
+
             <div style={{
               display: 'flex',
               gap: 6,
               fontSize: 11,
               color: 'var(--text-muted)',
+              justifyContent: 'space-between',
             }}>
               <span>V1 — Local Mode</span>
-              <span>·</span>
-              <span>{selectionCount} modules</span>
+              <span>{selectionCount} modules selected</span>
             </div>
           </div>
         </aside>
