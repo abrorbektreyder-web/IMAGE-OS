@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/lib/auth-client';
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -195,27 +197,51 @@ export default function LoginPage() {
             <label style={{ fontSize: 12, fontWeight: 500, color: 'rgba(148,163,184,0.8)', display: 'block', marginBottom: 6 }}>
               Parol
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              style={{
-                width: '100%',
-                padding: '10px 14px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 8,
-                color: '#F8FAFC',
-                fontSize: 14,
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={e => e.target.style.borderColor = 'rgba(99,102,241,0.5)'}
-              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 42px 10px 14px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 8,
+                  color: '#F8FAFC',
+                  fontSize: 14,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = 'rgba(99,102,241,0.5)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                aria-label={showPassword ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+                style={{
+                  position: 'absolute',
+                  right: 6,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  padding: 8,
+                  cursor: 'pointer',
+                  color: 'rgba(148,163,184,0.7)',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#F8FAFC'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(148,163,184,0.7)'}
+              >
+                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+              </button>
+            </div>
           </div>
 
           {error && (
