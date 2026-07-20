@@ -115,6 +115,11 @@ export default function HomePage() {
   const [customNotes, setCustomNotes] = useState<Record<string, string>>({});
   const [negCustom, setNegCustom] = useState('');
 
+  // ── Rasm generatsiyasi holati ──────────────────────────────
+  const [generating, setGenerating] = useState(false);
+  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [genError, setGenError] = useState('');
+
   // Fetch modules from API
   useEffect(() => {
     async function loadModules() {
@@ -202,6 +207,49 @@ export default function HomePage() {
   const positivePrompt = modulePrompt ? `${IDENTITY_PROMPT}\n\n${modulePrompt}` : '';
   const negativePrompt = buildNegative();
   const selectionCount = Object.values(selections).filter(Boolean).length;
+
+  // ── File -> base64 data URI ────────────────────────────────
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  // ── Rasm generatsiya qilish ────────────────────────────────
+  const handleGenerate = async () => {
+    if (!referenceFile || generating) return;
+    setGenerating(true);
+    setGenError('');
+    setResultImage(null);
+    try {
+      const dataUri = await fileToBase64(referenceFile);
+      const fullPrompt = positivePrompt
+        ? `${positivePrompt}\n\n[AVOID] ${negativePrompt}`
+        : `${IDENTITY_PROMPT}\n\n[AVOID] ${negativePrompt}`;
+
+      const res = await fetch(`${API_BASE}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: dataUri,
+          mimeType: referenceFile.type || 'image/jpeg',
+          prompt: fullPrompt,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.message || 'Generatsiya amalga oshmadi.');
+      }
+      setResultImage(data.imageUrl);
+    } catch (err: any) {
+      setGenError(err?.message || 'Nomaʼlum xatolik yuz berdi.');
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   return (
     <div style={{
@@ -681,8 +729,22 @@ export default function HomePage() {
               </div>
             )}
             
-            <button 
-              disabled={!referenceFile}
+            {genError && (
+              <div style={{
+                padding: '8px 12px',
+                background: 'rgba(239,68,68,0.1)',
+                border: '1px solid rgba(239,68,68,0.25)',
+                borderRadius: 8,
+                color: '#F87171',
+                fontSize: 12,
+                lineHeight: 1.5,
+              }}>
+                {genError}
+              </div>
+            )}
+
+            <button
+              disabled={!referenceFile || generating}
               style={{
                 background: referenceFile ? 'linear-gradient(135deg, #6366F1, #8B5CF6)' : 'var(--bg-surface)',
                 color: referenceFile ? '#FFF' : 'var(--text-muted)',
@@ -691,27 +753,38 @@ export default function HomePage() {
                 fontWeight: 600,
                 fontSize: 14,
                 border: referenceFile ? 'none' : '1px solid var(--border-default)',
-                cursor: referenceFile ? 'pointer' : 'not-allowed',
+                cursor: !referenceFile || generating ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
                 transition: 'all 0.2s',
-                opacity: referenceFile ? 1 : 0.6,
+                opacity: referenceFile ? (generating ? 0.8 : 1) : 0.6,
                 boxShadow: referenceFile ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
               }}
-              onClick={() => alert(`✨ Rasm generatsiyasi tez orada qo'shiladi!\n\nHozircha promptni "Nusxalash" tugmasi bilan olib, istalgan AI vositasida ishlating.\n\nPrompt:\n${positivePrompt}`)}
+              onClick={handleGenerate}
               onMouseEnter={(e) => {
-                if(referenceFile) e.currentTarget.style.transform = 'translateY(-1px)';
+                if(referenceFile && !generating) e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
                 if(referenceFile) e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-              </svg>
-              Rasm yaratish
+              {generating ? (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                  </svg>
+                  Yaratilmoqda...
+                </>
+              ) : (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Rasm yaratish
+                </>
+              )}
             </button>
 
             <div style={{
@@ -727,6 +800,97 @@ export default function HomePage() {
           </div>
         </aside>
       </main>
+
+      {/* ── Natija modali ─────────────────────────────────── */}
+      {resultImage && (
+        <div
+          onClick={() => setResultImage(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 200,
+            background: 'rgba(0,0,0,0.8)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-default)',
+              borderRadius: 16,
+              padding: 20,
+              maxWidth: 560,
+              width: '100%',
+              maxHeight: '90dvh',
+              overflowY: 'auto',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <p style={{ fontSize: 15, fontWeight: 700 }}>✨ Tayyor rasm</p>
+              <button
+                onClick={() => setResultImage(null)}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'var(--text-muted)', fontSize: 22, lineHeight: 1, padding: 0,
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={resultImage}
+              alt="Generatsiya natijasi"
+              style={{ width: '100%', borderRadius: 12, display: 'block' }}
+            />
+
+            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+              <a
+                href={resultImage}
+                download={`imageos-${Date.now()}.png`}
+                style={{
+                  flex: 1,
+                  background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+                  color: '#FFF',
+                  padding: '11px',
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Yuklab olish
+              </a>
+              <button
+                onClick={() => { setResultImage(null); handleGenerate(); }}
+                disabled={generating}
+                style={{
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '11px 16px',
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: generating ? 'not-allowed' : 'pointer',
+                }}
+              >
+                Qayta
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
