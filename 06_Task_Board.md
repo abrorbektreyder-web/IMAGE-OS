@@ -54,6 +54,20 @@ Use this document to track the progress of development. Mark tasks as in-progres
 
 ---
 
+## ⚠️ Chala ish / Bajarilmagan (2026-07-21)
+
+### Rasm generatsiyasi — Gemini (Nano Banana) moduli
+Kod yozilgan va master'ga push qilingan, LEKIN to'liq ishlashi uchun quyidagilar **hali bajarilmagan**:
+
+- [ ] **Google billing yoqilmagan** — billing'siz Gemini API 429 (kvota) xatosini qaytaradi, rasm generatsiya qilinmaydi. Billing yoqilib, $300 kredit faollashtirilishi kerak.
+- [ ] **API kaliti productionга (Render) ulanmagan** — `GEMINI_API_KEY` faqat lokal `apps/api/.env` da bor. Render dashboard → IMAGE-OS → Environment ga ham qo'shilishi kerak, aks holda jonli saytda "Rasm yaratish" tugmasi xato beradi.
+
+**Muhim:** Bu chala ishlar prompt yig'ish va "Nusxalash" (copy) funksiyasiga ta'sir qilmaydi — ular avvalgidek to'liq ishlaydi. Faqat "Rasm yaratish" tugmasi yuqoridagi ikki qadam bajarilgunча jonli emas.
+
+**Model:** `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite, ~$0.034/rasm). `GEMINI_IMAGE_MODEL` env orqali almashtiriladi.
+
+---
+
 ## 📈 Current Project Progress Status
 
 ```
